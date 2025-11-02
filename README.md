@@ -3,7 +3,7 @@
 Sample PHP applications that uses:
 * Dependency Injection
 * Apache routing
-* Composer (aka: Not reinventing the wheel)
+* Composer (aka: Not reinventing the wheel)aaaa
 
 ## Requirements
 
