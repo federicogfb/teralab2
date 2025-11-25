@@ -1,36 +1,36 @@
 FROM public.ecr.aws/docker/library/php:8.0-apache
 
-Instalar dependencias del sistema y Composer
+#Instalar dependencias del sistema y Composer
 RUN apt-get update && apt-get install -y git unzip
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-Instalar Composer
+#Instalar Composer
 COPY --from=public.ecr.aws/composer/composer:latest /usr/bin/composer /usr/bin/composer
 
-Copiar archivos de la aplicación
+#Copiar archivos de la aplicación
 COPY . /var/www/html/
 WORKDIR /var/www/html
 
-Instalar dependencias de Composer
+#Instalar dependencias de Composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-Configuración de Apache
+#Configuración de Apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 RUN mkdir -p /var/log/apache2/example-app
 COPY apache/default-site.conf /etc/apache2/sites-available/000-default.conf
 RUN sed -i 's/ServerName example-app.com/ServerName localhost/' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
-Copiar archivos de configuración
+#Copiar archivos de configuración
 COPY config/db-connection.php /var/www/html/config/db-connection.php
 COPY config-dev/vhost.conf /var/www/html/config/vhost.conf
 
-Crear directorio de logs con permisos de escritura
+#Crear directorio de logs con permisos de escritura
 RUN mkdir -p /var/www/html/logs && \
     chmod 777 /var/www/html/logs && \
     chown www-data:www-data /var/www/html/logs
 
-Permisos generales (DESPUÉS de crear logs)
+#Permisos generales (DESPUÉS de crear logs)
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html
 RUN chmod 777 /var/www/html/logs
