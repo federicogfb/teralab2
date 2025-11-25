@@ -13,7 +13,7 @@ RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' \
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get update && apt-get install wget git -y
 
-RUN make
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 #Esto es del dockerfile de joaco
 RUN ln -s /etc/apache2/sites-available/default-site.conf /etc/apache2/sites-enabled/default-site.conf
